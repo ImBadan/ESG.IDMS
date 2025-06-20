@@ -1,0 +1,91 @@
+@page
+@model AddModel
+@{
+    ViewData["Title"] = Localizer["Add Furniture and Fixture"];
+    ViewData["ActiveMainPage"] = "FurnitureAndFixture";
+    ViewData["Level1"] = "IDMS";
+}
+<form id="furnitureAndFixture-form" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<input type="hidden" asp-for="@Model.RemoveSubDetailId" />
+    <input type="hidden" asp-for="@Model.AsyncAction" />
+	<div id="PartialLoaderContainer">
+        <partial name="_InputFieldsPartial" model="Model.FurnitureAndFixture" />
+    </div> 
+	<div id="toolbar-container" class="btn-group" role="group">
+        <a asp-page="Index" id="btnCancelConfirmationModal" class="btn btn-secondary" title="@Localizer["Back"]"><i class="fas fa-arrow-left"></i></a>
+        <button type="button" id="btnConfirmationModal" class="btn btn-success" title="@Localizer["Save changes"]"><i class="fas fa-save"></i></button>
+    </div>   
+</form>
+<a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+</a>
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+
+<script asp-add-nonce>
+    $(document).ready(function () {
+		$.bindSaveConfirmationModal('Save', '#btnConfirmationModal','#furnitureAndFixture-form');
+		$.bindCancelConfirmationModal('Cancel', '#btnCancelConfirmationModal','#furnitureAndFixture-form', 'Do you want to cancel the changes?');
+		function InitializeForm()
+		{			
+
+			$('.DisableSelectDropdown').on('mousedown', function(e) {
+				e.preventDefault();
+				this.blur();
+				window.focus();
+			});
+			
+			$.fn.remarksSelect = function() {
+				this.filter("select").each(function() {
+					$(this).ajaxSelect({
+						ajax: {
+							url: '@Url.Page("/Remarks/Index", new { area = "IDMS", handler = "Select2Data" })',
+						}
+					});
+				});
+				return this;
+			};
+			$("#RemarksId").remarksSelect();
+
+			$.fn.locationSelect = function() {
+				this.filter("select").each(function() {
+					$(this).ajaxSelect({
+						ajax: {
+							url: '@Url.Page("/Location/Index", new { area = "IDMS", handler = "Select2Data" })',
+						}
+					});
+				});
+				return this;
+			};
+			$("#LocationId").locationSelect();
+
+			$.fn.furnitureandfixturebrandmodelSelect = function() {
+				this.filter("select").each(function() {
+					$(this).ajaxSelect({
+						ajax: {
+							url: '@Url.Page("/FurnitureAndFixtureBrandModel/Index", new { area = "IDMS", handler = "Select2Data" })',
+						}
+					});
+				});
+				return this;
+			};
+			$("#FurnitureAndFixtureBrandModelId").furnitureandfixturebrandmodelSelect();
+
+			$.fn.statusSelect = function() {
+				this.filter("select").each(function() {
+					$(this).ajaxSelect({
+						ajax: {
+							url: '@Url.Page("/Status/Index", new { area = "IDMS", handler = "Select2Data" })',
+						}
+					});
+				});
+				return this;
+			};
+			$("#StatusId").statusSelect();
+
+		}	
+		InitializeForm();
+    });
+</script>
+}

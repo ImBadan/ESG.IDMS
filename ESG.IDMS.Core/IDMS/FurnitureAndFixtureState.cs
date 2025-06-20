@@ -1,0 +1,28 @@
+using ESG.Common.Core.Base.Models;
+using System.ComponentModel;
+
+namespace ESG.IDMS.Core.IDMS;
+
+public record FurnitureAndFixtureState : BaseEntity
+{
+	public int ItemQty { get; init; }
+	public string ItemDescription { get; init; } = "";
+	public string SerialNo { get; init; } = "";
+	public string FurnitureAndFixtureBrandModelId { get; init; } = "";
+	public string LocationId { get; init; } = "";
+	public string StatusId { get; init; } = "";
+	public string RemarksId { get; init; } = "";
+	public string? FreeTextRemarks { get; init; }
+	public DateTime ExpirationDate { get; init; }
+	public string? IssuedBy { get; init; }
+	public string? IssuedTo { get; init; }
+	public DateTime IssueDate { get; init; }
+
+
+	public FurnitureAndFixtureBrandModelState? FurnitureAndFixtureBrandModel { get; init; }
+	public LocationState? Location { get; init; }
+	public StatusState? Status { get; init; }
+	public RemarksState? Remarks { get; init; }
+	
+	
+}

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<NoWarn>AD0001</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup> 
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.11.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
+	<PackageReference Include="Azure.Identity" Version="1.13.1" />
+	<PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
+	<PackageReference Include="System.Text.Json" Version="8.0.5" />
+	<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ESG.IDMS.Application\ESG.IDMS.Application.csproj" />
+    <ProjectReference Include="..\ESG.Common.API\ESG.Common.API.csproj" />
+  </ItemGroup>
+
+</Project>

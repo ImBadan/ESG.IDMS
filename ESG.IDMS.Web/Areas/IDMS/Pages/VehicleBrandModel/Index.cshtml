@@ -1,0 +1,152 @@
+@page
+@model IndexModel
+
+@section Styles {
+    <partial name="_DataTableStyles" />
+}
+@{
+    ViewData["Title"] = Localizer["Vehicle Brand / Model List"];
+    ViewData["ActiveMainPage"] = "VehicleBrandModel";
+    ViewData["Level1"] = "IDMSMasterfile";
+    var toolBarModel = new ESG.IDMS.Web.Models.ListingToolbarModel(Localizer["Vehicle Brand / Model List"].Value);
+    if ((await AuthorizationService.AuthorizeAsync(User, Permission.VehicleBrandModel.Create)).Succeeded)
+    {
+        toolBarModel.Buttons.Add(new ESG.IDMS.Web.Models.Button("/VehicleBrandModel/Add", "IDMS", ESG.IDMS.Web.Models.ButtonType.Add, 1));
+    }
+    if ((await AuthorizationService.AuthorizeAsync(User, Permission.VehicleBrandModel.Upload)).Succeeded)
+    {
+        toolBarModel.Buttons.Add(new ESG.IDMS.Web.Models.Button(ESG.IDMS.Web.Models.ButtonType.DownloadTemplate, 2));
+    }
+    if ((await AuthorizationService.AuthorizeAsync(User, Permission.VehicleBrandModel.Upload)).Succeeded)
+    {
+        toolBarModel.Buttons.Add(new ESG.IDMS.Web.Models.Button(ESG.IDMS.Web.Models.ButtonType.Upload, 3));
+    } 
+}
+<partial name="_ListingsToolbarPartial" model=@(toolBarModel) />
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <table id="vehicleBrandModel" class="table table-hover table-bordered table-striped responsive nowrap fills-table" width="100%">
+                    <thead>
+                        <tr>
+                            <th>
+								@Localizer["Description"]
+							</th>
+							  
+							
+                            <th>
+                                @Localizer["Actions"]
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<div id="BatchUploadPartialContainer">
+    <partial name="_BatchUpload" model="Model.BatchUpload" />
+</div>
+@section Scripts {
+    <partial name="_DataTableScripts" />
+    <script asp-add-nonce>
+        $(document).ready(function () {
+            var table = $('#vehicleBrandModel').DataTable({
+                select: false,
+                serverSide: true,
+                responsive: true,
+                order: [[1, 'desc']],
+                dom: '@Html.Raw(ESG.IDMS.Web.WebConstants.DataTableDOMLayOut)',
+                ajax:
+                {
+                    url: '@Url.Page("/VehicleBrandModel/Index", new { area = "IDMS", handler = "ListAll" })',
+                    type: "POST",
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                },
+                initComplete: function (settings, json) {
+                    BindTableRowCollapseEvent();
+                },
+                columns: [
+                    { data: "description", name: "Description", responsivePriority: 1, title: '@Localizer["Description"]', searchable: true, className: "text-start" },
+				   
+					
+                    {
+                        data: null,
+                        searchable: false,
+                        orderable: false,
+                        responsivePriority: 1,
+                        width: "10%",
+                        className: "fills-text-center",
+                        render: function (data, type, row, meta) {
+                            var url = '@Url.Page("/VehicleBrandModel/Details", new { area = "IDMS" })' + '?id=' + row.id;
+                            var button = '<a href="' + url + '" class="btn btnFills btnInfoIcon btnViewVehicleBrandModel" title="@Localizer["View"]"></a>';
+        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.VehicleBrandModel.Edit)).Succeeded)
+        {
+            <text>
+                                    url = '@Url.Page("/VehicleBrandModel/Edit", new { area = "IDMS" })' + '?id=' + row.id;
+                                button = button + '&nbsp;<a href="' + url + '" class="btn btnFills btnEditIcon btnEditVehicleBrandModel" title="@Localizer["Edit"]"></a>';
+            </text>
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.VehicleBrandModel.Delete)).Succeeded)
+        {
+            <text>
+                                    url = '@Url.Page("/VehicleBrandModel/Delete", new { area = "IDMS" })' + '?id=' + row.id;
+                                button = button + '&nbsp;<a href="' + url + '" class="btn btnFills btnDeleteIcon btnDeleteVehicleBrandModel" title="@Localizer["Delete"]"></a>';
+            </text>
+        }
+        
+        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.VehicleBrandModel.History)).Succeeded)
+        {
+            <text>
+                                    url = '@Url.Page("/VehicleBrandModel/History", new { area = "IDMS" })' + '?id=' + row.id;
+                                button = button + '&nbsp;<a href="' + url + '" class="btn btnFills btnHistoryIcon" title="@Localizer["History"]"></a>';
+            </text>
+        }
+                                                                                                                        return button;
+                        },
+                    },
+                    { data: "lastModifiedDate", name: "LastModifiedDate", title: '@Localizer["Last Modified Date"]', visible: false, searchable: false },
+                    { data: "id", name: "Id", visible: false },
+                ],
+                buttons: [
+                    'pageLength',
+                ],
+            });
+            var debounce = new $.fn.dataTable.Debounce(table); // Add delay to search
+
+            $('.btn-table_filter').on('click', function (e) {
+                table.ajax.reload(null, false);
+            });
+            function BindTableRowCollapseEvent() {
+                $('#vehicleBrandModel tbody').on('click', 'td.dtr-control', function () {
+                    $.showAjaxLoaderOnClick([".btnAddVehicleBrandModel", ".btnEditVehicleBrandModel", ".btnViewVehicleBrandModel", ".btnDeleteVehicleBrandModel"]);
+                });
+            }
+            $.showAjaxLoaderOnClick([".btnAddVehicleBrandModel", ".btnEditVehicleBrandModel", ".btnViewVehicleBrandModel", ".btnDeleteVehicleBrandModel"]);
+            $.InitializeSearchKeyCookies(table);
+            $('#btnBatchUpload').on('change', function (e) {
+                $('#batch-upload-form').submit();
+            });
+            $('#@(ESG.IDMS.Web.Models.ListingToolbarConstants.ButtonPrefix + ESG.IDMS.Web.Models.ButtonType.DownloadTemplate)').on('click', function (e) {
+				$('#download-template-form').submit();
+			});
+			$('#@(ESG.IDMS.Web.Models.ListingToolbarConstants.ButtonPrefix + ESG.IDMS.Web.Models.ButtonType.Upload)').on('click', function (e) {
+				$('#btnBatchUpload').click();
+			});
+        @if (!string.IsNullOrEmpty(Model.BatchUpload.BatchUploadFileName))
+        {
+            <text>
+                    $('#btnDownloadBatchUploadTemplateLink')[0].click();
+            </text>
+        }
+        });
+    </script>
+}

@@ -1,0 +1,310 @@
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var appName = Configuration.GetValue<string>("Application");
+    var backgroundClass = Configuration.GetValue<string>("BackgroundClass");
+    var appShortName = Configuration.GetValue<string>("ApplicationShortName");
+}
+<nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion @backgroundClass p-0">
+    <div class="container-fluid d-flex flex-column p-0">
+        <hr class="sidebar-divider my-0">
+        <ul class="navbar-nav text-light" id="accordionSidebar">
+            <li class="nav-item level-one-nav @ManageNavPages.Level1Class(ViewContext, "Dashboard")">
+                <a href="/IDMS/Dashboard" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Dashboard")">
+                    <i class="fas fa-tachometer-alt nav-icon"></i>
+                    <span>
+                        @Localizer["Dashboard"]
+                    </span>
+                </a>
+            </li>
+            @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Admin.View)).Succeeded)
+            {
+                <li class="nav-item level-one-nav @ManageNavPages.Level1Class(ViewContext, "Admin")">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cogs nav-icon"></i>
+                        <span>
+                            @Localizer["Admin"]
+                            <i class="right fas level-one-nav-icon fa-angle-left"></i>
+                        </span>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Entities.View)).Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a href="/Admin/Entities" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Entities")">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <span>@Localizer["Entities"]</span>
+                                </a>
+                            </li>
+                        }
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Roles.View)).Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a href="/Admin/Roles" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Roles")">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <span>@Localizer["Roles"]</span>
+                                </a>
+                            </li>
+                        }
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Users.View)).Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a href="/Admin/Users" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Users")">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <span>@Localizer["Users"]</span>
+                                </a>
+                            </li>
+                        }
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Apis.View)).Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a href="/Admin/Apis" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "APIs")">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <span>@Localizer["APIs"]</span>
+                                </a>
+                            </li>
+                        }
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Applications.View)).Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a href="/Admin/Applications" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Applications")">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <span>@Localizer["Applications"]</span>
+                                </a>
+                            </li>
+                        }
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.AuditTrail.View)).Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a href="/Admin/AuditTrail" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "AuditTrail")">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <span>@Localizer["Audit Trail"]</span>
+                                </a>
+                            </li>
+                        }
+
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.ReportSetup.View)).Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a href="/IDMS/ReportSetup" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "ReportSetup")">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <span>
+                                        @Localizer["Report Setup"]
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a href="/Admin/BatchUploadJobs" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "BatchUploadJobs")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Batch Upload Jobs"]
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            }
+            <li class="nav-item level-one-nav @ManageNavPages.Level1Class(ViewContext, "IDMS")">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-list-alt nav-icon"></i>
+                    <span>
+                        @Localizer["Inventory & Deployment Management System"]
+                        <i class="right fas level-one-nav-icon fa-angle-left"></i>
+                    </span>
+                </a>
+                <ul class="nav nav-treeview">
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.FireArms.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/FireArms" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "FireArms")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Firearms"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.RadioEquipment.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/RadioEquipment" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "RadioEquipment")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Radio Equipment"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Vehicle.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/Vehicle" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Vehicle")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Vehicle"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.OtherEquipment.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/OtherEquipment" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "OtherEquipment")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Other Equipment"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.FurnitureAndFixture.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/FurnitureAndFixture" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "FurnitureAndFixture")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Furniture and Fixture"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+
+
+            <li class="nav-item level-one-nav @ManageNavPages.Level1Class(ViewContext, "IDMSMasterfile")">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-list-alt nav-icon"></i>
+                    <span>
+                        @Localizer["IDMS Masterfile"]
+                        <i class="right fas level-one-nav-icon fa-angle-left"></i>
+                    </span>
+                </a>
+                <ul class="nav nav-treeview">
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.FireArmsBrandModel.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/FireArmsBrandModel" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "FireArmsBrandModel")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Firearms Model"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.RadioEquipmentBrandModel.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/RadioEquipmentBrandModel" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "RadioEquipmentBrandModel")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Radio Equipment Model"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.VehicleBrandModel.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/VehicleBrandModel" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "VehicleBrandModel")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Vehicle Model"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.OtherEquipmentBrandModel.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/OtherEquipmentBrandModel" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "OtherEquipmentBrandModel")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Other Equipment Model"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.FurnitureAndFixtureBrandModel.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/FurnitureAndFixtureBrandModel" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "FurnitureAndFixtureBrandModel")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Furniture and Fixture Model"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Location.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/Location" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Location")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Location"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Status.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/Status" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Status")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Status"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Permission.Remarks.View)).Succeeded)
+                    {
+                        <li class="nav-item">
+                            <a href="/IDMS/Remarks" class="nav-link @ManageNavPages.PageNavClass(ViewContext, "Remarks")">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <span>
+                                    @Localizer["Remarks"]
+                                </span>
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </li>
+
+
+            @{
+                var reportList = await dropdownService.GetReportList();
+                if (reportList.Count > 0)
+                {
+                    if ((await AuthorizationService.AuthorizeAsync(User, Permission.Report.View)).Succeeded)
+                    {
+                        <li class="nav-item level-one-nav @ManageNavPages.Level1Class(ViewContext, "Report")">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span>
+                                    @Localizer["Report"]
+                                    <i class="right fas level-one-nav-icon fa-angle-left"></i>
+                                </span>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                @foreach (var item in reportList)
+                                {
+                                    <li class="nav-item">
+                                        <a href="/IDMS/Report?Id=@item["ReportId"]" class="nav-link @ManageNavPages.PageNavClass(ViewContext, item["ReportClass"])">
+                                            <i class="fas fa-circle nav-icon"></i>
+                                            <span>@item["ReportName"]</span>
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+        <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+    </div>
+</nav>

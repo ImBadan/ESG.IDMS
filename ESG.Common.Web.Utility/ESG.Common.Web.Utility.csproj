@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Authors>Francis Bryan Mosquera</Authors>
+		<Company>Emme Security Group.</Company>
+		<Description>A library containing utility classes that can be used by web projects.</Description>
+		<Copyright>Copyright 2025 Emme Security Group.</Copyright>	
+		<Version>1.0.0</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LanguageExt.Core" Version="4.4.9" />
+		<PackageReference Include="LanguageExt.Transformers" Version="4.4.8" />	
+		<PackageReference Include="OpenIddict.Abstractions" Version="5.8.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />			
+	</ItemGroup>
+	<ItemGroup>	
+		<ProjectReference Include="..\ESG.Common.Identity.Abstractions\ESG.Common.Identity.Abstractions.csproj" />
+	</ItemGroup>
+</Project>

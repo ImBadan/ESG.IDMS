@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Authors>Francis Bryan Mosquera</Authors>
+		<Company>Emme Security Group.</Company>
+		<Description>A library containing base and utility classes related to business logic.</Description>
+		<Copyright>Copyright 2025 Emme Security Group.</Copyright>
+		<Version>1.0.0</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
+		<PackageReference Include="Azure.Identity" Version="1.13.1" />
+		<PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
+		<PackageReference Include="System.Text.Json" Version="8.0.5" />
+		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ESG.Common.Data\ESG.Common.Data.csproj" />
+		<ProjectReference Include="..\ESG.Common.Utility\ESG.Common.Utility.csproj" />
+	</ItemGroup>
+</Project>

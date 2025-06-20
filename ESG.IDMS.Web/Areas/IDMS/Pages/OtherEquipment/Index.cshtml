@@ -1,0 +1,196 @@
+@page
+@model IndexModel
+
+@section Styles {
+    <partial name="_DataTableStyles" />
+}
+@{
+    ViewData["Title"] = Localizer["Other Equipment List"];
+    ViewData["ActiveMainPage"] = "OtherEquipment";
+    ViewData["Level1"] = "IDMS";
+    var toolBarModel = new ESG.IDMS.Web.Models.ListingToolbarModel(Localizer["Other Equipment List"].Value);
+    if ((await AuthorizationService.AuthorizeAsync(User, Permission.OtherEquipment.Create)).Succeeded)
+    {
+        toolBarModel.Buttons.Add(new ESG.IDMS.Web.Models.Button("/OtherEquipment/Add", "IDMS", ESG.IDMS.Web.Models.ButtonType.Add, 1));
+    }
+    if ((await AuthorizationService.AuthorizeAsync(User, Permission.OtherEquipment.Upload)).Succeeded)
+    {
+        toolBarModel.Buttons.Add(new ESG.IDMS.Web.Models.Button(ESG.IDMS.Web.Models.ButtonType.DownloadTemplate, 2));
+    }
+    if ((await AuthorizationService.AuthorizeAsync(User, Permission.OtherEquipment.Upload)).Succeeded)
+    {
+        toolBarModel.Buttons.Add(new ESG.IDMS.Web.Models.Button(ESG.IDMS.Web.Models.ButtonType.Upload, 3));
+    } 
+}
+<partial name="_ListingsToolbarPartial" model=@(toolBarModel) />
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <table id="otherEquipment" class="table table-hover table-bordered table-striped responsive nowrap fills-table" width="100%">
+                    <thead>
+                        <tr>
+                            <th>
+								@Localizer["Item Qty"]
+							</th>
+							<th>
+								@Localizer["Item Description"]
+							</th>
+							<th>
+								@Localizer["SerialNo"]
+							</th>
+							<th>
+								@Localizer["Other Equipment Brand / Model"]
+							</th>
+							<th>
+								@Localizer["Location"]
+							</th>
+							<th>
+								@Localizer["Status"]
+							</th>
+							<th>
+								@Localizer["Remarks"]
+							</th>
+							<th>
+								@Localizer["FreeTextRemarks"]
+							</th>
+							<th>
+								@Localizer["Expiration Date"]
+							</th>
+							<th>
+								@Localizer["Issued By"]
+							</th>
+							<th>
+								@Localizer["Issued To"]
+							</th>
+							<th>
+								@Localizer["Issue Date"]
+							</th>
+							  
+							
+                            <th>
+                                @Localizer["Actions"]
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<div id="BatchUploadPartialContainer">
+    <partial name="_BatchUpload" model="Model.BatchUpload" />
+</div>
+@section Scripts {
+    <partial name="_DataTableScripts" />
+    <script asp-add-nonce>
+        $(document).ready(function () {
+            var table = $('#otherEquipment').DataTable({
+                select: false,
+                serverSide: true,
+                responsive: true,
+                order: [[12, 'desc']],
+                dom: '@Html.Raw(ESG.IDMS.Web.WebConstants.DataTableDOMLayOut)',
+                ajax:
+                {
+                    url: '@Url.Page("/OtherEquipment/Index", new { area = "IDMS", handler = "ListAll" })',
+                    type: "POST",
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                },
+                initComplete: function (settings, json) {
+                    BindTableRowCollapseEvent();
+                },
+                columns: [
+                    { data: "itemQtyFormatted", name: "ItemQty", responsivePriority: 1, title: '@Localizer["Item Qty"]', searchable: false, className: "fills-text-end" },
+				{ data: "itemDescription", name: "ItemDescription", responsivePriority: 1, title: '@Localizer["Item Description"]', searchable: true, className: "text-start" },
+				{ data: "serialNo", name: "SerialNo", responsivePriority: 1, title: '@Localizer["SerialNo"]', searchable: true, className: "text-start" },
+				{ data: "otherEquipmentBrandModelId", name: "OtherEquipmentBrandModelId", responsivePriority: 2, title: '@Localizer["Other Equipment Brand / Model"]', searchable: true, className: "text-start" },
+				{ data: "locationId", name: "LocationId", responsivePriority: 2, title: '@Localizer["Location"]', searchable: true, className: "text-start" },
+				{ data: "statusId", name: "StatusId", responsivePriority: 2, title: '@Localizer["Status"]', searchable: true, className: "text-start" },
+				{ data: "remarksId", name: "RemarksId", responsivePriority: 2, title: '@Localizer["Remarks"]', searchable: true, className: "text-start" },
+				{ data: "freeTextRemarks", name: "FreeTextRemarks", responsivePriority: 2, title: '@Localizer["FreeTextRemarks"]', searchable: true, className: "text-start" },
+				{ data: "expirationDateFormatted", name: "ExpirationDate", responsivePriority: 2, title: '@Localizer["Expiration Date"]', searchable: false, className: "text-start" },
+				{ data: "issuedBy", name: "IssuedBy", responsivePriority: 2, title: '@Localizer["Issued By"]', searchable: true, className: "text-start" },
+				{ data: "issuedTo", name: "IssuedTo", responsivePriority: 2, title: '@Localizer["Issued To"]', searchable: true, className: "text-start" },
+				{ data: "issueDateFormatted", name: "IssueDate", responsivePriority: 2, title: '@Localizer["Issue Date"]', searchable: false, className: "text-start" },
+				   
+					
+                    {
+                        data: null,
+                        searchable: false,
+                        orderable: false,
+                        responsivePriority: 1,
+                        width: "10%",
+                        className: "fills-text-center",
+                        render: function (data, type, row, meta) {
+                            var url = '@Url.Page("/OtherEquipment/Details", new { area = "IDMS" })' + '?id=' + row.id;
+                            var button = '<a href="' + url + '" class="btn btnFills btnInfoIcon btnViewOtherEquipment" title="@Localizer["View"]"></a>';
+        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.OtherEquipment.Edit)).Succeeded)
+        {
+            <text>
+                                    url = '@Url.Page("/OtherEquipment/Edit", new { area = "IDMS" })' + '?id=' + row.id;
+                                button = button + '&nbsp;<a href="' + url + '" class="btn btnFills btnEditIcon btnEditOtherEquipment" title="@Localizer["Edit"]"></a>';
+            </text>
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.OtherEquipment.Delete)).Succeeded)
+        {
+            <text>
+                                    url = '@Url.Page("/OtherEquipment/Delete", new { area = "IDMS" })' + '?id=' + row.id;
+                                button = button + '&nbsp;<a href="' + url + '" class="btn btnFills btnDeleteIcon btnDeleteOtherEquipment" title="@Localizer["Delete"]"></a>';
+            </text>
+        }
+        
+        @if ((await AuthorizationService.AuthorizeAsync(User, Permission.OtherEquipment.History)).Succeeded)
+        {
+            <text>
+                                    url = '@Url.Page("/OtherEquipment/History", new { area = "IDMS" })' + '?id=' + row.id;
+                                button = button + '&nbsp;<a href="' + url + '" class="btn btnFills btnHistoryIcon" title="@Localizer["History"]"></a>';
+            </text>
+        }
+                                                                                                                        return button;
+                        },
+                    },
+                    { data: "lastModifiedDate", name: "LastModifiedDate", title: '@Localizer["Last Modified Date"]', visible: false, searchable: false },
+                    { data: "id", name: "Id", visible: false },
+                ],
+                buttons: [
+                    'pageLength',
+                ],
+            });
+            var debounce = new $.fn.dataTable.Debounce(table); // Add delay to search
+
+            $('.btn-table_filter').on('click', function (e) {
+                table.ajax.reload(null, false);
+            });
+            function BindTableRowCollapseEvent() {
+                $('#otherEquipment tbody').on('click', 'td.dtr-control', function () {
+                    $.showAjaxLoaderOnClick([".btnAddOtherEquipment", ".btnEditOtherEquipment", ".btnViewOtherEquipment", ".btnDeleteOtherEquipment"]);
+                });
+            }
+            $.showAjaxLoaderOnClick([".btnAddOtherEquipment", ".btnEditOtherEquipment", ".btnViewOtherEquipment", ".btnDeleteOtherEquipment"]);
+            $.InitializeSearchKeyCookies(table);
+            $('#btnBatchUpload').on('change', function (e) {
+                $('#batch-upload-form').submit();
+            });
+            $('#@(ESG.IDMS.Web.Models.ListingToolbarConstants.ButtonPrefix + ESG.IDMS.Web.Models.ButtonType.DownloadTemplate)').on('click', function (e) {
+				$('#download-template-form').submit();
+			});
+			$('#@(ESG.IDMS.Web.Models.ListingToolbarConstants.ButtonPrefix + ESG.IDMS.Web.Models.ButtonType.Upload)').on('click', function (e) {
+				$('#btnBatchUpload').click();
+			});
+        @if (!string.IsNullOrEmpty(Model.BatchUpload.BatchUploadFileName))
+        {
+            <text>
+                    $('#btnDownloadBatchUploadTemplateLink')[0].click();
+            </text>
+        }
+        });
+    </script>
+}
